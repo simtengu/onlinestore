@@ -14,6 +14,15 @@ class OrderCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+             
+             'total_amount'=> $this->total_amount,
+             'user_id'=>$this->user_id,
+             'id'=>$this->id,
+             'items_count'=>$this->items_count,
+             'date_placed'=>$this->created_at->toDateString(),
+             'order_items'=>$this->orderItem       
+
+        ];
     }
 }

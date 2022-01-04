@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Models;
+use App\Models\Product;
+use App\Models\Order;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -41,4 +43,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function product(){
+        return $this->hasMany(Product::class);
+    }
+
+    public function order(){
+        return $this->hasMany(Order::class);
+    }
 }

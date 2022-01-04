@@ -15,11 +15,23 @@ class ProductController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
+     * 
      */
+
+    public function __construct(){
+        $this->middleware('auth:sanctum')->except('index');
+    }
+
     public function index()
     {
         $products = Product::all();
         return ProductResource::collection($products);
+    }
+
+    public function get_user_products(){
+        $user = auth()->user();
+        $products = Product::where('user_id',$user->id)->get();
+         return ProductResource::collection($products);
     }
 
     /**
@@ -30,10 +42,12 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+         $user = auth()->user();
         $productData = $request->except("formId");
         $formId = $request->formId;
         $product = new Product();
         $product->name = $request->name;
+        $product->user_id = $user->id;
         $product->desc = $request->desc;
         $product->price = $request->price;
         $product->category_id = $request->category_id;

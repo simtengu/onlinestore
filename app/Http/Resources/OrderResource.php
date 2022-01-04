@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ImageResource extends JsonResource
+class OrderResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,10 +14,14 @@ class ImageResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'name'=> "https://simpleshop.chuobusiness.com/images/".$this->name
+             return [
+             'id'=>$this->id,
+             'user_id'=>$this->user_id,
+             'total_amount'=> $this->total_amount,
+             'items_count'=>$this->items_count,
+             'date_placed'=>$this->created_at->toDateString(),
+             'order_items'=>$this->orderItem       
+
         ];
     }
 }
-
-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
