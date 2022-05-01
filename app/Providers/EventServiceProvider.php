@@ -1,11 +1,21 @@
 <?php
 
 namespace App\Providers;
-
+use App\Models\Product;
+use App\Models\Order;
+use App\Models\User;
+use App\Observers\ProductObserver;
+use App\Observers\OrderObserver;
+use App\Observers\UserObserver;
+use App\Listeners\SendWelcomeNotification;
+use App\Listeners\SendShippingNotification;
+use App\Events\OrderPlaced;
+use App\Events\NewUserRegistered;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
+
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -15,9 +25,11 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        Registered::class => [
-            SendEmailVerificationNotification::class,
-        ],
+    NewUserRegistered::class => [
+        SendWelcomeNotification::class,
+    ],
+    OrderPlaced::class=>[
+        SendShippingNotification::class]
     ];
 
     /**
@@ -27,6 +39,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Product::observe(ProductObserver::class);
+        User::observe(UserObserver::class);
     }
 }

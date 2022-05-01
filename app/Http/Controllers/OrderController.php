@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Events\OrderPlaced;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use App\Http\Resources\OrderResource;
+use App\Notifications\OrderPlaced as PlacedOrder;
 
 class OrderController extends Controller
 {
@@ -25,7 +27,12 @@ class OrderController extends Controller
      $user = auth()->user();
      $info = $request->all();
      $info['user_id'] = $user->id;
-     return $order->create($info);
+     $aos = $order->create($info);
+      
+      OrderPlaced::dispatch($aos);
+      $user->notify(new PlacedOrder($user->email));
+      return $aos;
+
 
     }
 
@@ -50,4 +57,4 @@ class OrderController extends Controller
 }
 
 
-// A9C145F4-0552-4281-B4B7-5D6A0D42FCF0
+// 26|aPOUv2ZX0M6BxbJDxEsXB8HjyaBSb0fNuPSF335y

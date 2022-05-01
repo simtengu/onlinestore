@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\NewUserRegistered;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -25,6 +26,8 @@ class AuthController extends Controller
     $new_user->password = Hash::make($request->password);
     
     if ($new_user->save()) {
+        //trigger user registered event..............
+        NewUserRegistered::dispatch($new_user);
         $token =  $new_user->createToken('authToken', ['server:administrate'])->plainTextToken;
         return response()->json(['message'=>'user created','user'=>$new_user,'access_token'=> $token],201);
        
